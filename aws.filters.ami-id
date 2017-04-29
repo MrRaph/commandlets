@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export AMI_FILTERS
+
+for ami in "$@"
+do
+	if [[ $ami == "ami-"* ]]; then
+		AMI="Name=image-id,Values=${ami}"
+
+		export AMI_FILTERS=" ${AMI_FILTERS} ${AMI} "
+	else
+		echo "ERR> AMI ID '$ami' is not correct ..."
+		echo "ERR> Should be like 'ami-*"
+		export AMI_FILTERS=""
+		exit 1
+	fi
+done
+
+echo -e $AMI_FILTERS

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+export TAG_FILTERS
+
+for tag in "$@"
+do
+	if [[ $tag == *"="* ]]; then
+		raw_tag=$(echo $tag | awk -F= '{print $1}')
+		raw_value=$(echo $tag | awk -F= '{print $2}')
+
+		TAG="Name=tag-key,Values=${raw_tag}"
+
+		if [[ ! -z ${raw_value} ]]
+		then
+			VALUE="Name=tag-value,Values=${raw_value}"
+		fi
+
+		export TAG_FILTERS=" ${TAG_FILTERS} ${TAG} ${VALUE} "
+	else
+		echo "ERR> Tag '$tag' is not correct ..."
+		echo "ERR> Shloud be like 'Key=Value"
+		export TAG_FILTERS=""
+		exit 1
+	fi
+done
+
+echo -e $TAG_FILTERS
