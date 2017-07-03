@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export TAG_FILTERS="Name=tag-key,Values=Name Name=tag-value,Values="
+
+IFS=',' read -ra names <<< "$1"
+
+for name in "${names[@]}"
+do
+		export TAG_FILTERS="${TAG_FILTERS}$(echo ${name} | tr '[:upper:]' '[:lower:]'),$(echo ${name} | tr '[:lower:]' '[:upper:]'),"
+done
+
+echo -e $TAG_FILTERS  | sed 's/,*$//g'
